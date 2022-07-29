@@ -23,7 +23,7 @@ class TreeFunctorSpec extends AnyWordSpec with Matchers {
     "the Tree has single Branch with 2 Leaves" should {
 
       "apply given function to all Leaves" in {
-        val tree         = Branch(Leaf(1), Leaf(2))
+        val tree = Branch(Leaf(1), Leaf(2))
         val expectedTree = Branch(Leaf("1"), Leaf("2"))
 
         tree.map(func) mustBe expectedTree
@@ -33,7 +33,7 @@ class TreeFunctorSpec extends AnyWordSpec with Matchers {
     "the Tree has multiple nested Branches with Leaves" should {
 
       "apply given function to all Leaves" in {
-        val tree         = Branch(
+        val tree = Branch(
           left = Branch(Leaf(1), Branch(Leaf(2), Leaf(3))),
           right = Branch(
             Branch(Branch(Leaf(4), Branch(Leaf(5), Leaf(6))), Leaf(7)),
