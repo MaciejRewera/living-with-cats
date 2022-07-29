@@ -1,6 +1,5 @@
 package rewera.livingwithcats.printable
 
-
 object PrintableInstances {
 
   implicit val stringPrintable: Printable[String] = (value: String) => value
@@ -16,6 +15,6 @@ object PrintableInstances {
 
   implicit def optionPrintable[A](implicit printable: Printable[A]): Printable[Option[A]] = {
     case Some(value) => printable.format(value)
-    case None => ""
+    case None        => ""
   }
 }
