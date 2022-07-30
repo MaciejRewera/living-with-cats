@@ -4,7 +4,7 @@ import cats.syntax.flatMap._
 import cats.syntax.functor._
 import cats.{Id, Monad}
 
-object Main {
+object MonadMain {
 
   def main(args: Array[String]): Unit = {
     println(sumSquare(Some(1), Option(2)))
