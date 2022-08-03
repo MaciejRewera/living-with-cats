@@ -5,13 +5,12 @@ import cats.Eval
 import scala.math.BigInt
 
 object EvalMain {
-  def main(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit =
     evaluationTypes()
 
 //    val result = factorial(50000).memoize
 //    println(result.value)
 //    println(result.value)
-  }
 
   private def evaluationTypes(): Unit = {
     val greetingAlways = Eval.always {
