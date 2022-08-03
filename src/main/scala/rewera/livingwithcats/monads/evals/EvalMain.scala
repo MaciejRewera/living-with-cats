@@ -44,6 +44,19 @@ object EvalMain {
     }.memoize
     println(greetingNow.value)
     println(greetingNow.value)
+    println()
+
+    val greetingNow2 = Eval.now {
+      println("Step 1")
+      "Hello"
+    }.flatMap { str =>
+      Eval.now {
+        println("Step 2")
+        s"$str World!"
+      }
+    }
+    println(greetingNow2.value)
+    println(greetingNow2.value)
   }
 
   private def factorial(n: BigInt): Eval[BigInt] =

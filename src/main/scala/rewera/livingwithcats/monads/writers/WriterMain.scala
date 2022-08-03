@@ -1,6 +1,7 @@
 package rewera.livingwithcats.monads.writers
 
 import cats.data.Writer
+import cats.implicits.catsSyntaxWriterId
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
@@ -12,6 +13,18 @@ import cats.instances.vector._
 object WriterMain {
 
   def main(args: Array[String]): Unit = {
+
+    val writer1 = for {
+      a <- 10.pure[Logged]
+      _ <- Vector("a", "b","c").tell
+      b <- 32.writer(Vector("d", "e", "f"))
+    } yield a + b
+    println(writer1.run)
+
+    val writer2 = 10.pure[Logged]
+      .flatMap(a => Writer(Vector("a", "b","c"), a).flatMap(_ => Writer(Vector("d", "e", "f"), 32).map(b => a + b)))
+
+    println(writer2.run)
 
     val writerResults = Await.result(
       Future.sequence(

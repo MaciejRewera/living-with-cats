@@ -48,13 +48,12 @@ object ReaderMain {
 
   private def findUsername(userId: UserId): DbReader[Option[Username]] = Reader(db => db.usernames.get(userId))
 
-  private def checkPassword(username: Username, password: Password): DbReader[Boolean] =
-    Reader(db =>
-      db.passwords.exists {
-        case (`username`, `password`) => true
-        case _                        => false
-      }
-    )
+  private def checkPassword(username: Username, password: Password): DbReader[Boolean] = Reader(db =>
+    db.passwords.exists {
+      case (`username`, `password`) => true
+      case _                        => false
+    }
+  )
 
   private def checkLogin(userId: UserId, password: Password): DbReader[Boolean] =
     for {
