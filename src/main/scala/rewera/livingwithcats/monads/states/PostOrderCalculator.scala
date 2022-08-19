@@ -2,6 +2,7 @@ package rewera.livingwithcats.monads.states
 
 import cats.data.State
 import cats.data.State._
+import cats.implicits.catsSyntaxApplicativeId
 
 object PostOrderCalculator {
 
@@ -14,7 +15,7 @@ object PostOrderCalculator {
   def evalInput(input: String): CalcState[Int] = evalAll(input.split("\\x20+").toSeq)
 
   def evalAll(input: Seq[String]): CalcState[Int] =
-    input.foldLeft(State.empty[Seq[Int], Int])((stack, symbol) => stack.flatMap(_ => evalOne(symbol)))
+    input.foldLeft(0.pure[CalcState])((stack, symbol) => stack.flatMap(_ => evalOne(symbol)))
 
   def evalOne(symbol: String): CalcState[Int] = State[Seq[Int], Int] { oldStack =>
     if (mathSymbols.contains(symbol)) {
@@ -54,6 +55,24 @@ object PostOrderCalculator {
     case "/" => num1 / num2
   }
 
+  def evalOne3(symbol: String): CalcState[Int] = symbol match {
+    case "+" => operator(_ + _)
+    case "-" => operator(_ - _)
+    case "*" => operator(_ * _)
+    case "/" => operator(_ / _)
+    case num => operand(num.toInt)
+  }
+
+  private def operand(num: Int): CalcState[Int] = State[Seq[Int], Int](oldStack => (num +: oldStack, num))
+
+  private def operator(func: (Int, Int) => Int): CalcState[Int] = State[Seq[Int], Int] {
+    case num1 :: num2 :: tmpStack =>
+      val res = func(num1, num2)
+      (res :: tmpStack, res)
+
+    case _ => throw new IllegalStateException
+  }
+
   def main(args: Array[String]): Unit = {
     println(evalOne("42").runA(Nil).value)
 
@@ -75,6 +94,15 @@ object PostOrderCalculator {
     } yield answer
     println("simpleProgram2 result = " + simpleProgram2.runA(Nil).value)
 
+    val simpleProgram3 = for {
+      _ <- evalOne3("1")
+      _ <- evalOne3("2")
+      _ <- evalOne3("+")
+      _ <- evalOne3("3")
+      answer <- evalOne3("*")
+    } yield answer
+    println("simpleProgram3 result = " + simpleProgram3.runA(Nil).value)
+
     /** *****************************************************************************************
       */
     val multistageProgram = evalAll(List("1", "2", "+", "3", "*"))
@@ -88,7 +116,7 @@ object PostOrderCalculator {
     println("biggerProgram result = " + biggerProgram.runA(Nil).value)
 
     /** *****************************************************************************************
-     */
+      */
     val multistageProgramString = "1 2 + 3 * "
     val multistageConvenientToReadProgram = evalInput(multistageProgramString)
     println("multistageConvenientToReadProgram result = " + multistageConvenientToReadProgram.runA(Nil).value)
@@ -98,8 +126,6 @@ object PostOrderCalculator {
     val biggerConvenientToReadProgram = evalInput(biggerProgramString)
     println("biggerConvenientToReadProgram result = " + biggerConvenientToReadProgram.runA(Nil).value)
     println("runInput(biggerProgramString) result = " + runInput(biggerProgramString))
-
-
 
   }
 }
