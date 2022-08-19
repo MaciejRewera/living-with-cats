@@ -5,14 +5,18 @@ import cats.data.State._
 
 object PostOrderCalculator {
 
-  type CalcState[A] = State[List[Int], A]
+  type CalcState[A] = State[Seq[Int], A]
 
   private val mathSymbols = Seq("+", "-", "*", "/")
 
-  def evalAll(input: List[String]): CalcState[Int] =
-    input.foldLeft(State.empty[List[Int], Int])((stack, symbol) => stack.flatMap(_ => evalOne(symbol)))
+  def runInput(input: String): Int = evalInput(input).runA(Nil).value
 
-  def evalOne(symbol: String): CalcState[Int] = State[List[Int], Int] { oldStack =>
+  def evalInput(input: String): CalcState[Int] = evalAll(input.split("\\x20+").toSeq)
+
+  def evalAll(input: Seq[String]): CalcState[Int] =
+    input.foldLeft(State.empty[Seq[Int], Int])((stack, symbol) => stack.flatMap(_ => evalOne(symbol)))
+
+  def evalOne(symbol: String): CalcState[Int] = State[Seq[Int], Int] { oldStack =>
     if (mathSymbols.contains(symbol)) {
       val num1 +: num2 +: tmpStack = oldStack
       val newResult = calc(num1, num2, symbol)
@@ -27,18 +31,18 @@ object PostOrderCalculator {
 
   def evalOne2(symbol: String): CalcState[Int] = if (mathSymbols.contains(symbol)) {
     for {
-      newResult <- inspect[List[Int], Int](calc(_, symbol))
-      _ <- modify[List[Int]](newResult +: _.drop(2))
+      newResult <- inspect[Seq[Int], Int](calc(_, symbol))
+      _ <- modify[Seq[Int]](newResult +: _.drop(2))
     } yield newResult
 
   } else {
     for {
-      _ <- modify[List[Int]](symbol.toInt +: _)
-      newResult <- pure[List[Int], Int](symbol.toInt)
+      _ <- modify[Seq[Int]](symbol.toInt +: _)
+      newResult <- pure[Seq[Int], Int](symbol.toInt)
     } yield newResult
   }
 
-  private def calc(stack: List[Int], symbol: String): Int = {
+  private def calc(stack: Seq[Int], symbol: String): Int = {
     val num1 +: num2 +: _ = stack
     calc(num1, num2, symbol)
   }
@@ -82,6 +86,20 @@ object PostOrderCalculator {
       ans <- evalOne("*")
     } yield ans
     println("biggerProgram result = " + biggerProgram.runA(Nil).value)
+
+    /** *****************************************************************************************
+     */
+    val multistageProgramString = "1 2 + 3 * "
+    val multistageConvenientToReadProgram = evalInput(multistageProgramString)
+    println("multistageConvenientToReadProgram result = " + multistageConvenientToReadProgram.runA(Nil).value)
+    println("runInput(multistageProgramString) result = " + runInput(multistageProgramString))
+
+    val biggerProgramString = "1 2 + 3 4 +  * "
+    val biggerConvenientToReadProgram = evalInput(biggerProgramString)
+    println("biggerConvenientToReadProgram result = " + biggerConvenientToReadProgram.runA(Nil).value)
+    println("runInput(biggerProgramString) result = " + runInput(biggerProgramString))
+
+
 
   }
 }
