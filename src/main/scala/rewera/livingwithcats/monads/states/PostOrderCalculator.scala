@@ -9,6 +9,9 @@ object PostOrderCalculator {
 
   private val mathSymbols = Seq("+", "-", "*", "/")
 
+  def evalAll(input: List[String]): CalcState[Int] =
+    input.foldLeft(State.empty[List[Int], Int])((stack, symbol) => stack.flatMap(_ => evalOne(symbol)))
+
   def evalOne(symbol: String): CalcState[Int] = State[List[Int], Int] { oldStack =>
     if (mathSymbols.contains(symbol)) {
       val num1 +: num2 +: tmpStack = oldStack
@@ -57,7 +60,7 @@ object PostOrderCalculator {
       _ <- evalOne("3")
       answer <- evalOne("*")
     } yield answer
-    println(simpleProgram.runA(Nil).value)
+    println("simpleProgram result = " + simpleProgram.runA(Nil).value)
 
     val simpleProgram2 = for {
       _ <- evalOne2("1")
@@ -66,7 +69,19 @@ object PostOrderCalculator {
       _ <- evalOne2("3")
       answer <- evalOne2("*")
     } yield answer
-    println(simpleProgram2.runA(Nil).value)
+    println("simpleProgram2 result = " + simpleProgram2.runA(Nil).value)
+
+    /** *****************************************************************************************
+      */
+    val multistageProgram = evalAll(List("1", "2", "+", "3", "*"))
+    println("multistageProgram result = " + multistageProgram.runA(Nil).value)
+
+    val biggerProgram = for {
+      _ <- evalAll(List("1", "2", "+"))
+      _ <- evalAll(List("3", "4", "+"))
+      ans <- evalOne("*")
+    } yield ans
+    println("biggerProgram result = " + biggerProgram.runA(Nil).value)
 
   }
 }
