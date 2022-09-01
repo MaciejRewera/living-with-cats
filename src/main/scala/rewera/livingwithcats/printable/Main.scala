@@ -1,43 +1,57 @@
 package rewera.livingwithcats.printable
 
-import PrintableInstances._
-import PrintableSyntax.PrintableOps
-
 import cats._
 import cats.implicits._
+import rewera.livingwithcats.printable.PrintableInstances._
+import rewera.livingwithcats.printable.PrintableSyntax.PrintableOps
 
-object Main extends App {
+object Main {
 
-  val cat = Cat("Shiro", 7, "marble-white")
+  def main(args: Array[String): Unit = {
+    catsMain()
 
-  Printable.print(cat.name)
-  Printable.print(cat.age)
-  Printable.print(cat.color)
+  }
 
-  Printable.print(cat)
+  def catsMain(): Unit = {
+    val cat = Cat("Shiro", 7, "marble-white")
 
-  println(cat.format)
-  cat.print
+    Printable.print(cat.name)
+    Printable.print(cat.age)
+    Printable.print(cat.color)
 
-  val showInt = Show[Int]
-  println(showInt.show(123))
-  println(123.show)
+    Printable.print(cat)
 
-  println(cat.show)
+    println(cat.format)
+    cat.print
 
-  val cat1 = Cat("Garfield", 38, "orange and black")
-  val cat2 = Cat("Heathcliff", 33, "orange and black")
-  val optionCat1 = Option(cat1)
-  val optionCat2 = Option.empty[Cat]
+    val showInt = Show[Int]
+    println(showInt.show(123))
+    println(123.show)
 
-  println("-------------")
-  println(cat1 === cat2)
-  println(cat2 === cat1)
-  println(cat1 === cat1)
-  println(cat2 === cat2)
-  println("-------------")
-  println(optionCat1 === optionCat2)
-  println(optionCat2 === optionCat1)
-  println(optionCat1 === optionCat1)
-  println(optionCat2 === optionCat2)
+    println(cat.show)
+
+    val cat1 = Cat("Garfield", 38, "orange and black")
+    val cat2 = Cat("Heathcliff", 33, "orange and black")
+    val optionCat1 = Option(cat1)
+    val optionCat2 = Option.empty[Cat]
+
+    println("-------------")
+    println(cat1 === cat2)
+    println(cat2 === cat1)
+    println(cat1 === cat1)
+    println(cat2 === cat2)
+    println("-------------")
+    println(optionCat1 === optionCat2)
+    println(optionCat2 === optionCat1)
+    println(optionCat1 === optionCat1)
+    println(optionCat2 === optionCat2)
+  }
+
+  def contramapMain(): Unit = {
+    val box1 = Box("Hello World!")
+    val box2 = Box(true)
+
+    Printable.format(box1)
+    Printable.format(box2)
+  }
 }
