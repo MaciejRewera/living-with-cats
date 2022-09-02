@@ -7,9 +7,9 @@ import rewera.livingwithcats.printable.PrintableSyntax.PrintableOps
 
 object Main {
 
-  def main(args: Array[String): Unit = {
+  def main(args: Array[String]): Unit = {
     catsMain()
-
+    contramapMain()
   }
 
   def catsMain(): Unit = {
@@ -51,7 +51,7 @@ object Main {
     val box1 = Box("Hello World!")
     val box2 = Box(true)
 
-    Printable.format(box1)
-    Printable.format(box2)
+    println(Printable.format(box1))
+    println(Printable.format(box2))
   }
 }
