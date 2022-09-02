@@ -1,4 +1,4 @@
-package rewera.livingwithcats.functors
+package rewera.livingwithcats.models
 
 import cats.Functor
 import cats.implicits.toFunctorOps

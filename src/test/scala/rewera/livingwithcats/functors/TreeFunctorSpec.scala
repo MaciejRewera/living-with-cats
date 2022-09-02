@@ -3,7 +3,7 @@ package rewera.livingwithcats.functors
 import cats.implicits.toFunctorOps
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import rewera.livingwithcats.functors.Tree.{Branch, Leaf}
+import rewera.livingwithcats.models.Tree._
 
 class TreeFunctorSpec extends AnyWordSpec with Matchers {
 

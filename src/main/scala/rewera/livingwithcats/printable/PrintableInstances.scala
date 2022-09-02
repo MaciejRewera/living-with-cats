@@ -1,5 +1,7 @@
 package rewera.livingwithcats.printable
 
+import rewera.livingwithcats.models.{Box, Cat}
+
 object PrintableInstances {
 
   implicit val stringPrintable: Printable[String] = (value: String) => value

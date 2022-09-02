@@ -4,8 +4,8 @@ import cats.syntax.flatMap._
 import cats.syntax.functor._
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import rewera.livingwithcats.functors.Tree
-import rewera.livingwithcats.functors.Tree.{branch, leaf}
+import rewera.livingwithcats.models.Tree
+import rewera.livingwithcats.models.Tree.{branch, leaf}
 import rewera.livingwithcats.monads.custom.TreeMonad.treeMonad
 
 class TreeMonadSpec extends AnyWordSpec with Matchers {

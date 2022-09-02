@@ -1,8 +1,8 @@
 package rewera.livingwithcats.monads.custom
 
 import cats.Monad
-import rewera.livingwithcats.functors.Tree
-import rewera.livingwithcats.functors.Tree.{Branch, Leaf, leaf}
+import rewera.livingwithcats.models.Tree
+import rewera.livingwithcats.models.Tree._
 
 object TreeMonad {
 

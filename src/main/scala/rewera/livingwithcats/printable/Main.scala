@@ -2,6 +2,7 @@ package rewera.livingwithcats.printable
 
 import cats._
 import cats.implicits._
+import rewera.livingwithcats.models.{Box, Cat}
 import rewera.livingwithcats.printable.PrintableInstances._
 import rewera.livingwithcats.printable.PrintableSyntax.PrintableOps
 

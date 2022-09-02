@@ -1,4 +1,4 @@
-package rewera.livingwithcats.printable
+package rewera.livingwithcats.models
 
 import cats.implicits._
 import cats.{Eq, Show}
