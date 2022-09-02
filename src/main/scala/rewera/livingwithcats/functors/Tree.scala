@@ -1,4 +1,4 @@
-package rewera.livingwithcats.branchingfunctors
+package rewera.livingwithcats.functors
 
 import cats.Functor
 import cats.implicits.toFunctorOps

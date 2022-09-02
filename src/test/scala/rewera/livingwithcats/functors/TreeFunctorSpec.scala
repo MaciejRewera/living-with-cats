@@ -1,9 +1,9 @@
-package rewera.livingwithcats.branchingfunctors
+package rewera.livingwithcats.functors
 
 import cats.implicits.toFunctorOps
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import rewera.livingwithcats.branchingfunctors.Tree.{Branch, Leaf}
+import rewera.livingwithcats.functors.Tree.{Branch, Leaf}
 
 class TreeFunctorSpec extends AnyWordSpec with Matchers {
 
