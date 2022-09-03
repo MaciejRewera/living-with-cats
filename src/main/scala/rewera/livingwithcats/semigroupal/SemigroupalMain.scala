@@ -1,11 +1,12 @@
 package rewera.livingwithcats.semigroupal
 
+import cats.Monoid
 import cats.instances.int._
 import cats.instances.invariant._
 import cats.instances.string._
 import cats.syntax.apply._
+import cats.syntax.parallel._
 import cats.syntax.semigroup._
-import cats.{Monoid, Semigroupal}
 import rewera.livingwithcats.models.Cat
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -30,10 +31,12 @@ object SemigroupalMain {
     semigroupalWithFutures()
     semigroupalWithLists()
     semigroupalWithEithers()
+    parallelWithEithers()
 
   }
 
   private def catMonoids(): Unit = {
+    println("\n--- catMonoids() ---")
 
     val tupleToCat: (String, Int, String) => Cat = Cat.apply
     val catToTuple: Cat => (String, Int, String) = cat => (cat.name, cat.age, cat.color)
@@ -51,6 +54,7 @@ object SemigroupalMain {
   }
 
   private def semigroupalWithFutures(): Unit = {
+    println("\n--- semigroupalWithFutures() ---")
     case class CatWithFood(name: String, age: Int, favoriteFoods: Seq[String])
 
     val futureCat = (
@@ -62,15 +66,33 @@ object SemigroupalMain {
     println(Await.result(futureCat, 1.second))
   }
 
-  private def semigroupalWithLists(): Unit =
+  private def semigroupalWithLists(): Unit = {
+    println("\n--- semigroupalWithLists() ---")
     println((List(1, 2), List(3, 4)).tupled)
+  }
 
-  private type ErrorOr[A] = Either[Vector[String], A]
-  private def semigroupalWithEithers(): Unit =
-    println(
-      Semigroupal[ErrorOr].product(
-        Left(Vector("Error 1")),
-        Left(Vector("Error 2"))
-      )
-    )
+  private type ErrorOr[A] = Either[Seq[String], A]
+  private def semigroupalWithEithers(): Unit = {
+    println("\n--- semigroupalWithEithers() ---")
+    val error1: ErrorOr[Int] = Left(Seq("Error 1"))
+    val error2: ErrorOr[Int] = Left(Seq("Error 2"))
+
+    println((error1, error2).tupled)
+  }
+
+  private def parallelWithEithers(): Unit = {
+    println("\n--- parallelWithEithers() ---")
+    val error1: ErrorOr[Int] = Left(Seq("Error 1"))
+    val error2: ErrorOr[Int] = Left(Seq("Error 2"))
+    println((error1, error2).parTupled)
+
+    val success1: ErrorOr[Int] = Right(1)
+    val success2: ErrorOr[Int] = Right(2)
+    val addTwo = (x: Int, y: Int) => x + y
+
+    println((error1, error2).parMapN(addTwo))
+    println((success1, success2).parMapN(addTwo))
+  }
+
+  private type MyType[A, B] = Option[A => B]
 }
