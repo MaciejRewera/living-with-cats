@@ -23,7 +23,7 @@ object MapReduceMain {
     println(Await.result(parallelFoldMapWithCats(Vector(1, 2, 3))(_.toString + "! "), 1.second))
     println(Await.result(parallelFoldMapWithCats("Hello, world!".toVector)(_.toString.toUpperCase), 1.second))
 
-//    runBenchmarks()
+    runBenchmarks()
   }
 
   private def foldMap[A, B: Monoid](input: Vector[A])(func: A => B): B = input.foldLeft(Monoid[B].empty)(_ |+| func(_))
@@ -56,6 +56,11 @@ object MapReduceMain {
     val result2 = measureExecTime(Await.result(parallelFoldMap(benchmarkInput)(identity), 5.seconds))
     println(s" -> ${result2._1}")
     println(s"Execution time: ${result2._2.toMillis} ms")
+
+    print("parallelFoldMapWithCats...")
+    val result3 = measureExecTime(Await.result(parallelFoldMapWithCats(benchmarkInput)(identity), 5.seconds))
+    println(s" -> ${result3._1}")
+    println(s"Execution time: ${result3._2.toMillis} ms")
   }
 
   private def measureExecTime[A](func: => A): (A, FiniteDuration) = {
